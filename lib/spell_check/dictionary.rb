@@ -27,6 +27,9 @@ class Dictionary
     return found_word
   end
 
+  # Scans the word set (down cased) for any values that match the regular expression parameter
+  # @param [RegExp] reg_ex
+  # @return [Set]
   def find_reg_ex_matches( reg_ex )
     match_set = Set.new
     @words_set.to_a.each do |word|

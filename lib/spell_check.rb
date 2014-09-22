@@ -46,88 +46,47 @@ private
   # @param [String] word
   # @return [String]
   def self.adjust_case( word )
-    if word.length > 1
-      return word[0] + word[1..word.length].to_s.downcase
-    else
-      return word
-    end
+    return word[0] + word[1..word.length].to_s.downcase if word.length > 1
+    word # string only contains one character
   end
 
-  # This is the main logic block for correcting repetition spelling errors.  This method
+  # This is the main logic block for correcting repetition spelling errors.  This method removes all consecutive
+  # repetition of characters in a word, builds a regular expression that allows repetitions of each character,
+  # scans the dictionary for any matches to this regular expression, then finds and returns the closest match.
   # @param [String] word
   # @return [String]
   def self.correct_repetitions( word )
-    downcase_word = word.downcase
-    chars = downcase_word.chars
-    dup_hash = find_consecutive_duplicates chars
-    return nil if dup_hash.nil?
 
-    # Create an array of sub-strings with non-repeating characters, divided where repetitions occur
-    str_array = build_sub_string_array downcase_word, dup_hash
+    # Remove all consecutive repetitions of characters in the word
+    squeeze_str = word.downcase.squeeze
 
-    # Create a set of potential matches using regular expressions
-    reg_ex_matches = get_reg_ex_matches str_array
+    # Create a set of potential matches using regular expression
+    reg_ex_matches = find_reg_ex_matches squeeze_str
 
     # Compare matches against original input and return closest match
     return get_best_match word, reg_ex_matches unless reg_ex_matches.empty?
 
-    return nil
+    nil # no corrections found
   end
 
-  # Seeks out consecutive duplicates of characters, stores their characters and repetition counts.  The index of the
-  # first duplicate char is the key and the value is the repetition count after the first.  For example, string
-  # 'ccc' would have a key of 0 and a value of 2.
-  # @param [Array] chars
-  # @return [Hash]
-  def self.find_consecutive_duplicates( chars )
-    dup_hash = Hash.new
-    prev_char = nil
-    cur_index = nil
-    chars.each_with_index do |char, index|
-      if char == prev_char
-        if cur_index.nil?
-          cur_index = index
-          dup_hash[cur_index] = 0
-        end
-        dup_hash[cur_index] += 1
-      else
-        cur_index = nil
-      end
-      prev_char = char
-    end
-    return dup_hash
-  end
-
-  # Creates an array of sub strings that exist between repeated characters in the word parameter
-  def self.build_sub_string_array( word, dup_hash )
-    str_array = Array.new
-    keys = dup_hash.keys.sort
-    cur_index = 0
-    keys.each do |key|
-      str_array.push(word[cur_index..key-1])
-      cur_index = key + dup_hash[key]
-    end
-    str_array.push(word[cur_index..word.length]) unless cur_index >= word.length
-    return str_array
-  end
-
-  def self.get_reg_ex_matches( str_array )
-    reg_ex = build_reg_ex str_array
+  # Builds a RegExp object and then matches it against the dictionary values
+  # @param [String] word
+  # @return [Array]
+  def self.find_reg_ex_matches( word )
+    reg_ex = build_reg_ex word
     @dict.find_reg_ex_matches reg_ex
   end
 
-  # Creates a regular expression object that allows any number of multiples of the last character in each array index.
-  # This satisfies the use case of over-repeated characters, but does not check for under-repeated characters.  This
-  # functionality could be easily added by allowing multiples of every character in the word.
-  # @param [Array] str_array
+  # Creates a regular expression object that allows any number of consecutive repetitions of each character in the
+  # input string.
+  # @param [String] word
   # @return [RegExp]
-  def self.build_reg_ex( str_array )
-    exp_str = '^'
-    str_array.each do |sub|
-      reg_sub = sub[0,sub.length-1] + '[' + sub[-1,1] + ']' + '+'
-      exp_str += reg_sub
+  def self.build_reg_ex( word )
+    exp_str = '^' # disallow preceding characters
+    word.chars.each do |char|
+      exp_str += '[' + char + ']' + '+' # this allows 1 or more instances of this char
     end
-    exp_str += '$'
+    exp_str += '$' # disallow trailing characters
     Regexp.new exp_str
   end
 
@@ -138,7 +97,7 @@ private
   def self.get_best_match( word, matches )
     lex_array = matches.to_a
     lex_array.sort! { |x,y| levenshtein_distance(x,word) <=> levenshtein_distance(y,word)}
-    lex_array.first
+    lex_array.first # lowest number of changes means closest match to original input
   end
 
   # The Levenshtein Distance algorithm measures the number of changes required to match two strings.  For this reason

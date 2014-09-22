@@ -43,12 +43,16 @@ class SpellCheckTest < Test::Unit::TestCase
   end
 
   def test_similar_words
-    assert_match(SpellCheck.checkWord('ggodd'), 'god')
-    assert_match(SpellCheck.checkWord('ggoodd'), 'good')
+    assert_match(SpellCheck.checkWord('Godd'), 'God')
+    assert_match(SpellCheck.checkWord('goodd'), 'good')
   end
 
   def test_capitalized
-    assert_match(SpellCheck.checkWord('Godd'), 'God')
+    assert_match(SpellCheck.checkWord('ZZabiann'), 'Zabian')
+  end
+
+  def test_under_repeated_chars
+    assert_match(SpellCheck.checkWord('excelent'), 'excellent')
   end
 
 end
