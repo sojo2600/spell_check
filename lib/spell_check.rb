@@ -5,7 +5,7 @@ module SpellCheck
 
   # Checks if input word exists in dictionary.  This method will accept any case and will make corrections for any
   # over-repeated strings.
-  # @param [Object] word
+  # @param [Object] aWordToCheck
   # @return [String]
   def self.checkWord( aWordToCheck )
     @dict = Dictionary.new
@@ -30,15 +30,12 @@ module SpellCheck
 
 private
 
-  # Returns true if any non-English alphabet characters exist in input object, false otherwise.
+  # Returns true if any non-English alphabet characters exist in input object, false otherwise. This is also the
+  # primary check to ensure that the object will convert to a String
   # @param [Object] word
   # @return [Boolean]
-  def self.has_non_alphabet_chars ( word )
-    begin
-      word.to_s.match(/[^A-Za-z]/)
-    rescue
-      puts 'Invalid input: Please enter only characters from the English alphabet.'
-    end
+  def self.has_non_alphabet_chars( word )
+    return word.to_s.match(/[^A-Za-z]/) rescue true
   end
 
   # Takes an input object, converts it to a string, then returns it with all but the first character down cased.  The
@@ -47,7 +44,7 @@ private
   # @return [String]
   def self.adjust_case( word )
     return word[0] + word[1..word.length].to_s.downcase if word.length > 1
-    word # string only contains one character
+    word # string contains one or fewer characters
   end
 
   # This is the main logic block for correcting repetition spelling errors.  This method removes all consecutive
@@ -56,7 +53,6 @@ private
   # @param [String] word
   # @return [String]
   def self.correct_repetitions( word )
-
     # Remove all consecutive repetitions of characters in the word
     squeeze_str = word.downcase.squeeze
 
@@ -91,13 +87,13 @@ private
   end
 
   # Given a set of words that are possible corrections for the input word, this method compares the corrected words
-  # to the input and returns to closest matching correction.
+  # to the input and returns to closest matching correction using Levenshtein distance.
   # @param [String] word
   # @param [Array] matches
   def self.get_best_match( word, matches )
-    lex_array = matches.to_a
-    lex_array.sort! { |x,y| levenshtein_distance(x,word) <=> levenshtein_distance(y,word)}
-    lex_array.first # lowest number of changes means closest match to original input
+    lev_array = matches.to_a
+    lev_array.sort! { |x,y| levenshtein_distance(x,word) <=> levenshtein_distance(y,word)}
+    lev_array.first # lowest number of changes means closest match to original input
   end
 
   # The Levenshtein Distance algorithm measures the number of changes required to match two strings.  For this reason
@@ -105,6 +101,7 @@ private
   # http://stackoverflow.com/questions/16323571/measure-the-distance-between-two-strings-with-ruby
   # @param [String] s
   # @param [String] t
+  # @return [Integer]
   def self.levenshtein_distance(s, t)
     m = s.length
     n = t.length
