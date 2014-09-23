@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{Checks to see if a word is correctly spelled}
   spec.description   = %q{Checks if a word exists in text dictionary.  If it does not, this gem will attempt to correct
                           the input by changing repeated characters and case.}
-  spec.homepage      = ''
+  spec.homepage      = 'http://www.linkedin.com/in/garricksolberg/'
   spec.license       = 'MIT'
 
   spec.files         = %w(lib/spell_check.rb lib/spell_check/dictionary.rb lib/spell_check/words.txt
@@ -21,5 +21,5 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_development_dependency 'bundler', '~> 1.6'
-  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'rake', '~> 0'
 end

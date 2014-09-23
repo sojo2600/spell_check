@@ -1,4 +1,5 @@
 class Dictionary
+  require 'set'
 
   # Instantiates dictionary with words from the words.txt file.  This gem has been built specifically for this word
   # list, so the file name is hard coded.
