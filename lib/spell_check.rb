@@ -67,7 +67,7 @@ private
 
   # Builds a RegExp object and then matches it against the dictionary values
   # @param [String] word
-  # @return [Array]
+  # @return [Set]
   def self.find_reg_ex_matches( word )
     reg_ex = build_reg_ex word
     @dict.find_reg_ex_matches reg_ex
@@ -89,7 +89,7 @@ private
   # Given a set of words that are possible corrections for the input word, this method compares the corrected words
   # to the input and returns to closest matching correction using Levenshtein distance.
   # @param [String] word
-  # @param [Array] matches
+  # @param [Set] matches
   def self.get_best_match( word, matches )
     lev_array = matches.to_a
     lev_array.sort! { |x,y| levenshtein_distance(x,word) <=> levenshtein_distance(y,word)}
