@@ -18,11 +18,11 @@ module SpellCheck
     word = adjust_case( aWordToCheck )
 
     # Attempt to see if input word is found before doing regular expression search
-    corrected_word = @dict.find_word(word)
+    corrected_word = @dict.find_word word
     return corrected_word unless corrected_word.nil?
 
     # Input word was not found, so try matching regular expression
-    corrected_word = correct_repetitions(word)
+    corrected_word = correct_repetitions word
     return corrected_word unless corrected_word.nil?
 
     return not_found
@@ -90,6 +90,7 @@ private
   # to the input and returns to closest matching correction using Levenshtein distance.
   # @param [String] word
   # @param [Set] matches
+  # @return [Array]
   def self.get_best_match( word, matches )
     lev_array = matches.to_a
     lev_array.sort! { |x,y| levenshtein_distance(x,word) <=> levenshtein_distance(y,word)}
