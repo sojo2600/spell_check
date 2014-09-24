@@ -25,7 +25,7 @@ class Dictionary
     elsif @words_set.include? word_str.downcase
       found_word = word_str.downcase
     end
-    return found_word
+    found_word
   end
 
   # Scans the word set (down cased) for any values that match the regular expression parameter
@@ -36,7 +36,7 @@ class Dictionary
     @words_set.to_a.each do |word|
       match_set.add word if word.downcase.match(reg_ex)
     end
-    return match_set
+    match_set
   end
 
 end

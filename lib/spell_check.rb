@@ -5,7 +5,7 @@ require 'levenshtein'
 module SpellCheck
 
   # Checks if input word exists in dictionary.  This method will accept any case and will make corrections for any
-  # over-repeated strings.
+  # over or under repeated characters in the String.
   # @param [Object] aWordToCheck
   # @return [String]
   def self.checkWord( aWordToCheck )
@@ -26,21 +26,21 @@ module SpellCheck
     corrected_word = correct_repetitions word
     return corrected_word unless corrected_word.nil?
 
-    return not_found
+    not_found
   end
 
 private
 
   # Returns true if any non-English alphabet characters exist in input object, false otherwise. This is also the
-  # primary check to ensure that the object will convert to a String
+  # primary check to ensure that the object will convert to a String.
   # @param [Object] word
   # @return [Boolean]
   def self.has_non_alphabet_chars( word )
-    return word.to_s.match(/[^A-Za-z]/) rescue true
+    word.to_s.match(/[^A-Za-z]/) rescue true
   end
 
-  # Takes an input object, converts it to a string, then returns it with all but the first character down cased.  The
-  # first character case is retained for comparing between words like god and God
+  # Takes an input String, then returns it with all but the first character down cased.  The first character case is
+  # retained for comparing between words like god and God.
   # @param [String] word
   # @return [String]
   def self.adjust_case( word )
