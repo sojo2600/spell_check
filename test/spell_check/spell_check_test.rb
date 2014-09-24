@@ -42,13 +42,6 @@ class SpellCheckTest < Test::Unit::TestCase
     assert_match(SpellCheck.checkWord('excelent'), 'excellent')
   end
 
-  def test_levenshtein_distance
-    assert(SpellCheck.levenshtein_distance('cat', 'catt') == 1)
-    assert(SpellCheck.levenshtein_distance('dog', 'Dog') == 1)
-    assert(SpellCheck.levenshtein_distance('fish', 'fish') == 0)
-    assert(SpellCheck.levenshtein_distance('dog', 'cat') == 3)
-  end
-
   def test_get_best_match
     matches = %w{shoot shot window key car sky bug}
     assert_match(SpellCheck.get_best_match('shoott', matches), 'shoot')

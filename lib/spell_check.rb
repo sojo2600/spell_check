@@ -1,5 +1,6 @@
 require 'spell_check/version'
 require 'spell_check/dictionary'
+require 'levenshtein'
 
 module SpellCheck
 
@@ -93,38 +94,8 @@ private
   # @return [Array]
   def self.get_best_match( word, matches )
     lev_array = matches.to_a
-    lev_array.sort! { |x,y| levenshtein_distance(x,word) <=> levenshtein_distance(y,word)}
+    lev_array.sort! { |x,y| Levenshtein.distance(x,word) <=> Levenshtein.distance(y,word)}
     lev_array.first # lowest number of changes means closest match to original input
-  end
-
-  # The Levenshtein Distance algorithm measures the number of changes required to match two strings.  For this reason
-  # it is a good method to compare the similarity of strings.  Please note that this code was sourced at
-  # http://stackoverflow.com/questions/16323571/measure-the-distance-between-two-strings-with-ruby
-  # @param [String] s
-  # @param [String] t
-  # @return [Integer]
-  def self.levenshtein_distance(s, t)
-    m = s.length
-    n = t.length
-    return m if n == 0
-    return n if m == 0
-    d = Array.new(m+1) {Array.new(n+1)}
-
-    (0..m).each {|i| d[i][0] = i}
-    (0..n).each {|j| d[0][j] = j}
-    (1..n).each do |j|
-      (1..m).each do |i|
-        d[i][j] = if s[i-1] == t[j-1]  # adjust index into string
-                    d[i-1][j-1]       # no operation required
-                  else
-                    [ d[i-1][j]+1,    # deletion
-                      d[i][j-1]+1,    # insertion
-                      d[i-1][j-1]+1,  # substitution
-                    ].min
-                  end
-      end
-    end
-    d[m][n]
   end
 
 end

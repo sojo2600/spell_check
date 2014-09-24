@@ -89,6 +89,7 @@
     <orderEntry type="jdk" jdkName="RVM: ruby-2.0.0-p481" jdkType="RUBY_SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="bundler (v1.6.2, RVM: ruby-2.0.0-p481) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="levenshtein (v0.2.2, RVM: ruby-2.0.0-p481) [gem]" level="application" />
   </component>
 </module>
 
