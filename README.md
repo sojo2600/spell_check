@@ -1,7 +1,7 @@
 # SpellCheck
 
 This gem will check to see if an word exists in its text dictionary.  It will accept any case input and will correct
-any over-repeated characters.
+any over or under repeated characters.
 
 ## Installation
 
@@ -20,7 +20,8 @@ Or install it yourself as:
 ## Usage
 
 checkWord(word)  The parameter is the word you want to have corrected.  If the word is spelled correctly, your word will
-be returned to you.  If no correction is found, you will be notified.
+be returned to you.  If not, it will attempt to correct the case and repetition of characters.  If no correction
+is found, you will be notified.
 
 ## Contributing
 
